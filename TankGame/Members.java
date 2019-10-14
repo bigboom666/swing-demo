@@ -13,7 +13,7 @@ class Tanks{
     // 坦克的方向 0 表示向上 1 表示向右 2 表示 下 3 表示左
     private int direct = 0;
     // 设置坦克的速度
-    int speed = 1;
+    int speed = 3;
     // 坦克的颜色
     private int color;
     public Tanks(int x, int y){
@@ -61,21 +61,24 @@ class Tanks{
 
 // 敌人的坦克类, 每个敌人坦克类都是一个线程，都可以自己活动
 class EneMyTank extends Tanks implements Runnable{
-    // 初始化 并调用父类的构造方法
+
     // 敌人坦克是否死亡
-    private int times=0;
+    private int times=0;  //子弹数量吗？？？？
     // 定义一个集合可以保存敌人的子弹
     Vector<Shot> fire = new Vector<Shot>();
     // 敌人发射子弹，应该是在刚刚创建敌人子弹时,或者是敌人子弹销毁时
     // 定义一个集合类，可以访问到Panel上所有坦克，这样才能知道每一辆坦克在哪，保证不会重叠
     private Vector<EneMyTank> allTank = new Vector<EneMyTank>();
+    // 初始化 并调用父类的构造方法
     public EneMyTank(int x, int y){
         super(x, y);
     }
 
-    // 判断是否碰到别的坦克
+
+
+    // 判断是否碰到别的坦克    含自己的tank吗？？？+++++++++++++++++++++++++++++++++++
     private boolean isTouchOther(){
-        boolean isTouch=false;
+        boolean isTouch=false;//为什么放在isTouchOther方法里？？？？？是不是造成重叠不动的原因？？？并没有+++++++++++++++++++++++++++++++++
         switch (this.getDirect()){
             case 0:
                 // 坦克方向向上,当坦克方向是向上时，则需要判断是否会碰到向上/向下 向右/左方向开的坦克
@@ -225,12 +228,12 @@ class EneMyTank extends Tanks implements Runnable{
     public void run() {
         while (true){
             // 让敌人的坦克可以移动, 每隔一段时间修改敌人的坐标
-            // 根据敌人的方向来决定敌人如何移动, 方向有随机的变化
+            // 根据敌人的方向来决定敌人如何移动, 方向有随机的变化       别处有随即换方向的代码？？？++++++++++++++++++++++++++++++++++
             switch (this.getDirect()){
                 case 0:
                     // 敌人的方向向上 y 轴减小
                     for (int i=0; i<30; i++){
-                        if (y > 0 && !this.isTouchOther()){
+                        if (y > 0 ){  //&& !this.isTouchOther()    造成重叠之后无法移动的原因
                             y-=speed;
                         }
                         try{
@@ -243,7 +246,7 @@ class EneMyTank extends Tanks implements Runnable{
                 case 1:
                     // 向右 x 轴 加大
                     for (int i=0; i<30; i++){
-                        if (x >= 0 && ! this.isTouchOther()){
+                        if (x >= 0 ){ //&& ! this.isTouchOther()
                             x-=speed;
                         }
                         try{
@@ -257,7 +260,7 @@ class EneMyTank extends Tanks implements Runnable{
                 case 2:
                     // 向下
                     for (int i=0; i<30; i++){
-                        if (y < 245 && ! this.isTouchOther()){
+                        if (y < 245 ){ //&& ! this.isTouchOther()
                             y+=speed;
                         }
                         try{
@@ -270,7 +273,7 @@ class EneMyTank extends Tanks implements Runnable{
                 case 3:
                     // 向左
                     for (int i=0; i<30; i++){
-                        if (x < 355 && ! this.isTouchOther()){
+                        if (x < 355 ){  //&& ! this.isTouchOther()
                             x+=speed;
                         }
                         try{
@@ -342,7 +345,7 @@ class MyTank extends Tanks{
 
             case 0:
                 // 子弹向上
-                shot = new Shot(x+10, y, 0);
+                shot = new Shot(x+10, y, 0);   //为什么x+10???+++++++++++++
                 // 将子弹放到集合中
                 shots.add(shot);
                 break;
@@ -378,7 +381,7 @@ class MyTank extends Tanks{
     }
     // 控制坦克向右移动, 向右移动 应该是 x 轴的值 加大
     public void moveRight(){
-        this.x-=this.speed;
+        this.x+=this.speed;
 
     }
     // 控制坦克向下移动 向下移动 应该是 y 轴的值 加大
@@ -387,21 +390,16 @@ class MyTank extends Tanks{
     }
     // 控制坦克向左移动, 向左移动应该是 x 轴 减小
     public void moveLeft(){
-        this.x+= this.speed;
+        this.x-= this.speed;
     }
 }
 
 class Shot implements Runnable{
     // 子弹的坐标, 方向, 速度
     int x;
-
-    public int getY() {
-        return y;
-    }
-
     int y;
     private int direct;
-    private int speed=1;
+    private int speed=3;
     // 子弹是否已经销毁, 子弹打到边缘位置，或者是打到敌人子弹时就要对子弹进行销毁处理
     boolean isLive=true;
     public Shot(int x, int y, int direct){
@@ -411,6 +409,9 @@ class Shot implements Runnable{
     }
     public int getX() {
         return x;
+    }
+    public int getY() {
+        return y;
     }
 
     public void setX(int x) {
@@ -460,7 +461,7 @@ class Bomb{
     int x;
     int y;
     // 炸弹的生命
-    int life = 9;
+    int life = 9;     //?????????????????????
     boolean isLive = true;
     public Bomb(int x, int y){
         this.x = x;
